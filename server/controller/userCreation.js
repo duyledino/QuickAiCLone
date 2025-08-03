@@ -1,7 +1,7 @@
 import pool from "../config/db.js";
 import { v4 as uuid } from "uuid";
 import "dotenv/config";
-import vnpay from "../config/vnpay.js";
+import { createPaymentUrl } from "../config/vnpay.js";
 
 const getCreationsById = async (req, res) => {
   const { user_id } = req.query;
@@ -50,18 +50,10 @@ const upgradePlan = async (req, res) => {
   const planId = uuid();
   console.log(process.env.ReturnRoute);
   try {
-    const paymentUrl = vnpay.buildPaymentUrl({
-      // user_id: user.user_id,
-      vnp_Amount: amount, //...VND
-      vnp_IpAddr: "127.0.0.1",
-      vnp_ReturnUrl: `${process.env.ReturnRoute}?user_id=${user.user_id}`,
-      vnp_BankCode: "NCB",
-      vnp_TxnRef: `${user.user_id}+${planId}`,
-      vnp_OrderInfo: `Thanh toán đơn hàng ${planId}`,
-    });
+    const paymentURL = createPaymentUrl(req,amount,`${process.env.ReturnRoute}?user_id=${user.user_id}`,`${user.user_id}+${planId}`,`Thanh toán đơn hàng ${planId}`)
     return res
       .status(200)
-      .json({ PaymentURL: paymentUrl, user_id: user.user_id });
+      .json({ PaymentURL: paymentURL, user_id: user.user_id });
   } catch (error) {
     console.error(error);
   }

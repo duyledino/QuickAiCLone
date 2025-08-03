@@ -65,7 +65,7 @@ const Billing = () => {
                   </div>
                   <div className="flex flex-col p-2.5 gap-2.5 h-56">
                     {item.benefit.map((i, j) => (
-                      <div className="w-fit flex gap-3 text-gray-700">
+                      <div key={j} className="w-fit flex gap-3 text-gray-700">
                         <Check className="w-3.5 text-gray-400" />{" "}
                         <p className="text-[12px]" key={j * 4}>
                           {i}
