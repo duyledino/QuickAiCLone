@@ -28,14 +28,12 @@ const Billing = () => {
           }
         );
         if (response.status === 200) {
-          console.log(response.data);
-          const { user_plan } = response.data.user;
-          console.log("user_plan :");
-          setMyPlan(user_plan);
+          console.log("user_plan :",response?.data?.user?.user_plan);
+          setMyPlan(response?.data?.user?.user_plan);
         }
       } catch (error) {
         console.error(error);
-        toast.error(err.response?.data?.Message || "Something went wrong");
+        toast.error(error.response?.data?.Message || "Something went wrong");
       }
     };
     if (user !== null) {

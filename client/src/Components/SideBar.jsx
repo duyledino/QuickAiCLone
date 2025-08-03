@@ -5,6 +5,7 @@ import { Crown, LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 import BillingModal from "./BillingModal";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL;
 
@@ -28,7 +29,7 @@ const SideBar = ({ showSidebar }) => {
         }
       } catch (error) {
         console.error(error);
-        toast.error(err.response?.data?.Message || "Something went wrong");
+        toast.error(error.response?.data?.Message || "Something went wrong");
       }
     };
     fetchApi()

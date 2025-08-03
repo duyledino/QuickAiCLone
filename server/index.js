@@ -20,4 +20,12 @@ setup();
 creationRoute(app);
 userRoute(app);
 
+app.get("/",(rep,res)=>{
+    res.send("Server is live");
+})
+
+app.listen(PORT,()=>{
+    console.log(`serser is running on http://localhost:${PORT}`)
+})
+
 export const handler = serverless(app);

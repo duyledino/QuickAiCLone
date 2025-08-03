@@ -12,7 +12,7 @@ const LoveByCreators = () => {
       <div className="w-full flex flex-col lg:flex-row justify-center items-center gap-8">
         {dummyTestimonialData.map(
           ({ image, title, content, rating,name }, index) => (
-            <div className=" lg:w-[300px] w-full h-fit max-h-80 flex flex-col items-center p-10 gap-5 rounded-xl shadow-[-5px_5px_20px_rgba(0,0,0,0.3)] transition-all hover:translate-y-[-10px]">
+            <div key={index} className=" lg:w-[300px] w-full h-fit max-h-80 flex flex-col items-center p-10 gap-5 rounded-xl shadow-[-5px_5px_20px_rgba(0,0,0,0.3)] transition-all hover:translate-y-[-10px]">
               <div key={index} className="w-full flex gap-3">
                 {Array.from({length: rating},(item,index)=>index).map((item,index)=>(
                     <img src={assets.star_icon} alt="star" key={index}/>
