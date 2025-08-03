@@ -104,17 +104,20 @@ const BillingModal = ({ isOpen, setOpen }) => {
                   </div>
                 ))}
               </div>
-              <p className="text-gray-950 mb-1">
+              <p className="text-gray-950 font-extrabold mb-1 text-[12px]">
                 Nhập thông tin thanh toán dưới đây để thực hiện nâng cấp
               </p>
-              <p className="text-gray-600 mb-1">
+              <p className="text-gray-600 mb-1 text-[12px]">
                 Số Thẻ: <span className="font-medium">9704198526191432198</span>
               </p>
-              <p className="text-gray-600 mb-1">
+              <p className="text-gray-600 mb-1 text-[12px]">
                 Tên chủ thẻ: <span className="font-medium">NGUYEN VAN A</span>
               </p>
-              <p className="text-gray-600 mb-1">
-                Ngày phát hành: <span className="font-medium">Ngày phát hành:</span>
+              <p className="text-gray-600 mb-1 text-[12px]">
+                Ngày phát hành: <span className="font-medium">07/15</span>
+              </p>
+              <p className="text-gray-600 mb-1 text-[12px]">
+                Mã OTP: <span className="font-medium">123456</span>
               </p>
               <button
                 onClick={handleSwitchToPremium}
