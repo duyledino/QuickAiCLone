@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import serverless from 'serverless-http'
 import { clerkMiddleware, requireAuth } from "@clerk/express";
 import { setup } from "./config/db.js";
 import creationRoute from "./route/createtionRoute.js";
@@ -19,6 +20,4 @@ setup();
 creationRoute(app);
 userRoute(app);
 
-app.listen(PORT, () => {
-  console.log("server is running at http://localhost:" + PORT);
-});
+export const handler = serverless(app);
