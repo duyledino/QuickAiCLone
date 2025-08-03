@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@layer {
+  @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
+}
+
+:root {
+  --highlight: #5044e5;
+}
+
+@theme inline {
+  --highlight: var(--highlight);
+}
+
+@layer base {
+
+  .reset-tw,.reset-tw *{
+    all: revert !important;
+  }
+  .bgGradient {
+    background: url("./assets/gradientBackground.png") no-repeat;
+    background-size: cover;
+  }
+  html {
+    font-family: "JetBrains Mono", monospace;
+  }
+}
