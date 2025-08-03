@@ -13,11 +13,13 @@ axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL;
 const BillingModal = ({ isOpen, setOpen }) => {
   const [userId, setUserId] = useState(null);
   const { getToken } = useAuth();
-
+  const [loading,setLoading] = useState(false);
   if (!isOpen) return null;
 
   const handleSwitchToPremium = async () => {
+    setLoading(true);
     try {
+      
       const token = await getToken();
       const response = await axios.post(
         `/user/upgradePlan`,
@@ -26,7 +28,7 @@ const BillingModal = ({ isOpen, setOpen }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
+      console.log(response.data.PaymentURL);
       if (response.status === 200) {
         setOpen(false);
         setUserId(response.data.user_id);
@@ -39,10 +41,12 @@ const BillingModal = ({ isOpen, setOpen }) => {
         "Something went wrong";
       toast.error(message, { autoClose: 3500 });
     }
+    setLoading(false);
   };
 
   return (
     <>
+    {loading ? <Loading/> : ""}
       <motion.div
         initial={{ opacity: 0, translateY: "-10px" }}
         animate={{ opacity: 1, translateY: 0 }}
