@@ -13,13 +13,11 @@ axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL;
 const BillingModal = ({ isOpen, setOpen }) => {
   const [userId, setUserId] = useState(null);
   const { getToken } = useAuth();
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   if (!isOpen) return null;
-
   const handleSwitchToPremium = async () => {
     setLoading(true);
     try {
-      
       const token = await getToken();
       const response = await axios.post(
         `/user/upgradePlan`,
@@ -32,7 +30,10 @@ const BillingModal = ({ isOpen, setOpen }) => {
       if (response.status === 200) {
         setOpen(false);
         setUserId(response.data.user_id);
-        window.location.href = response.data.PaymentURL;  
+        window.open(response.data.PaymentURL, "_blank");
+        setTimeout(() => {
+          window.close();
+        }, 5000);
       }
     } catch (error) {
       const message =
@@ -46,7 +47,7 @@ const BillingModal = ({ isOpen, setOpen }) => {
 
   return (
     <>
-    {loading ? <Loading/> : ""}
+      {loading ? <Loading /> : ""}
       <motion.div
         initial={{ opacity: 0, translateY: "-10px" }}
         animate={{ opacity: 1, translateY: 0 }}
