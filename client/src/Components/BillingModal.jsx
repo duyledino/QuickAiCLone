@@ -104,6 +104,18 @@ const BillingModal = ({ isOpen, setOpen }) => {
                   </div>
                 ))}
               </div>
+              <p className="text-gray-950 mb-1">
+                Nhập thông tin thanh toán dưới đây để thực hiện nâng cấp
+              </p>
+              <p className="text-gray-600 mb-1">
+                Số Thẻ: <span className="font-medium">9704198526191432198</span>
+              </p>
+              <p className="text-gray-600 mb-1">
+                Tên chủ thẻ: <span className="font-medium">NGUYEN VAN A</span>
+              </p>
+              <p className="text-gray-600 mb-1">
+                Ngày phát hành: <span className="font-medium">Ngày phát hành:</span>
+              </p>
               <button
                 onClick={handleSwitchToPremium}
                 className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200"
