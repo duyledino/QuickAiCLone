@@ -6,7 +6,7 @@ import axios from "axios";
 
 axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL;
 
-const StatusBar = ({numberCreation}) => {
+const StatusBar = ({ numberCreation }) => {
   const { user } = useUser();
   const { getToken } = useAuth();
   const [myPlan, setMyPlan] = useState(null);
@@ -36,7 +36,7 @@ const StatusBar = ({numberCreation}) => {
       fetchApi();
     }
   }, [user]);
-  console.log("myPlan in status bar: ",myPlan)
+  console.log("myPlan in status bar: ", myPlan);
   return (
     <div className="flex lg:flex-row flex-col gap-7">
       <div className="p-3 flex items-center justify-between w-2xs border-gray-400 bg-white rounded-[10px] shadow-[0_0_5px_1px_rgba(0,0,0,0.2)]">
@@ -48,7 +48,7 @@ const StatusBar = ({numberCreation}) => {
           <Sparkles className="text-white " />
         </div>
       </div>
-      {myPlan === "Free" ? (
+      {myPlan === undefined || myPlan === "Free" ? (
         <div className="p-3 flex items-center justify-between w-2xs border-gray-400 bg-white rounded-[10px] shadow-[0_0_5px_1px_rgba(0,0,0,0.2)]">
           <div className="flex flex-col">
             <h2 className="text-gray-400 capitalize">action plan</h2>

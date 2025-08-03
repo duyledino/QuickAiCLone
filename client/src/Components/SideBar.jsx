@@ -16,23 +16,27 @@ const SideBar = ({ showSidebar }) => {
   const [plan, setPlan] = useState(null);
   const [isOpen, setOpen] = useState(false);
   useEffect(() => {
+    console.log(user);
     const fetchApi = async () => {
       try {
-        const response = await axios.get(`/user/user_info?user_id=${user.id}`, {
+        const response = await axios.get(`/user/user_info?user_id=${user?.id}`, {
           headers: {
             Authorization: `Bearer ${await getToken()}`,
           },
         });
+        console.log("response in sidebar: ",response);
         if (response.status === 200) {
-          const { user_plan } = response.data.user;
-          setPlan(user_plan);
+          setPlan(response?.data?.user?.user_plan);
+          console.log("user plan here: ",response?.data?.user?.user_plan);
         }
       } catch (error) {
         console.error(error);
         toast.error(error.response?.data?.Message || "Something went wrong");
       }
     };
-    fetchApi()
+    if(user !== null){
+      fetchApi();
+    }
   }, [user]);
   return (
     <>

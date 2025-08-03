@@ -13,7 +13,7 @@ export const auth = async (req, res, next) => {
     if (user.rowCount === 0) {
       const userClerk = await clerkClient.users.getUser(userId);
       user = await pool.query(
-        "insert into users(user_id,user_gmail,user_name) values($1,$2,$3) returnings *",
+        "insert into users(user_id,user_gmail,user_name) values($1,$2,$3) returning *",
         [
           userId,
           userClerk.emailAddresses[0].emailAddress,
