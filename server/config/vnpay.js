@@ -1,14 +1,7 @@
-import "dotenv/config";
-import QueryString from "qs";
-import crypto from "node:crypto";
-import dayjs from "dayjs";
 
-const createPaymentUrl = (req,amount,returnURL,vnp_TxnRef,OrderInfo) => {
-  let ipAddr =
-    req.headers["x-forwarded-for"] ||
-    req.connection.remoteAddress ||
-    req.socket.remoteAddress ||
-    req.connection.socket.remoteAddress;
+
+const createPaymentUrl = (req, amount, returnURL, vnp_TxnRef, OrderInfo) => {
+  console.log("returnURL: ", returnURL);
   const createDate = dayjs().format("YYYYMMDDHHmmss");
   let currCode = "VND";
   let vnp_Params = {};
@@ -23,7 +16,11 @@ const createPaymentUrl = (req,amount,returnURL,vnp_TxnRef,OrderInfo) => {
   vnp_Params["vnp_OrderType"] = "other";
   vnp_Params["vnp_Amount"] = amount * 100;
   vnp_Params["vnp_ReturnUrl"] = returnURL;
-  vnp_Params["vnp_IpAddr"] = ipAddr;
+  vnp_Params["vnp_IpAddr"] =
+    req.headers["x-forwarded-for"] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    "127.0.0.1";
   vnp_Params["vnp_CreateDate"] = createDate;
   vnp_Params["vnp_BankCode"] = "NCB"; // cannot use QRCODE because of testing only
   vnp_Params = sortObject(vnp_Params);
@@ -70,4 +67,4 @@ function sortObject(obj) {
   return sorted;
 }
 
-export {createPaymentUrl};
+export { createPaymentUrl };

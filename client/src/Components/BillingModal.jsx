@@ -31,9 +31,6 @@ const BillingModal = ({ isOpen, setOpen }) => {
         setOpen(false);
         setUserId(response.data.user_id);
         window.open(response.data.PaymentURL, "_blank");
-        setTimeout(() => {
-          window.close();
-        }, 5000);
       }
     } catch (error) {
       const message =

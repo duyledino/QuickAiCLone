@@ -56,6 +56,6 @@ export const userAuth = async (req, res, next) => {
   let user = await pool.query(`select * from users where user_id = $1`, [
     userId,
   ]);
-  req.user = user.rows[0]
+  req.user = user.rows[0];
   next();
 };
