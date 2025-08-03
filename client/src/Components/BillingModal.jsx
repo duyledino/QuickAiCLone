@@ -26,7 +26,7 @@ const BillingModal = ({ isOpen, setOpen }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log(response.data.PaymentURL);
+      console.log("PaymentURL in client: ",response.data.PaymentURL);
       if (response.status === 200) {
         setOpen(false);
         setUserId(response.data.user_id);
