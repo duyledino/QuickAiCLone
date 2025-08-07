@@ -7,9 +7,10 @@ import Nav from "../Components/Nav";
 import Tools from "../Components/Tools";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import Loading from "../Components/Loading";
 
 function Home() {
-  const [Loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { scrollYProgress } = useScroll();
   const path = useLocation();
   useEffect(() => {
@@ -20,7 +21,7 @@ function Home() {
   }, [path]);
   return (
     <>
-      {Loading ? <Loading /> : ""}
+      {loading ? <Loading /> : ""}
       <Nav />
       <Hero />
       <Tools />
