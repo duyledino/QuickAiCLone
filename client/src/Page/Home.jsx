@@ -5,25 +5,28 @@ import Hero from "../Components/Hero";
 import LoveByCreators from "../Components/LoveByCreators";
 import Nav from "../Components/Nav";
 import Tools from "../Components/Tools";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 function Home() {
-  const {scrollYProgress} = useScroll();
+  const [Loading, setLoading] = useState(false);
+  const { scrollYProgress } = useScroll();
   const path = useLocation();
-  useEffect(()=>{
+  useEffect(() => {
     window.scrollTo({
-      top:0,behavior:'smooth'
-    })
-  },[path])
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [path]);
   return (
     <>
+      {Loading ? <Loading /> : ""}
       <Nav />
       <Hero />
-      <Tools/>
-      <LoveByCreators/>
-      <Billing/>
-      <Footer/>
+      <Tools />
+      <LoveByCreators />
+      <Billing setLoading={setLoading} />
+      <Footer />
     </>
   );
 }

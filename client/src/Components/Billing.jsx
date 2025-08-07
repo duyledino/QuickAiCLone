@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL;
 
-const Billing = () => {
+const Billing = ({ setLoading }) => {
   const { user } = useUser();
   const { openSignIn } = useClerk();
   const { getToken } = useAuth();
@@ -18,6 +18,7 @@ const Billing = () => {
   const [isOpen, setOpen] = useState(false);
   useEffect(() => {
     const fetchApi = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(
           `/user/user_info?user_id=${user?.id}`,
@@ -28,11 +29,13 @@ const Billing = () => {
           }
         );
         if (response.status === 200) {
-          console.log("user_plan :",response?.data?.user?.user_plan);
+          setLoading(false);
+          console.log("user_plan :", response?.data?.user?.user_plan);
           setMyPlan(response?.data?.user?.user_plan);
         }
       } catch (error) {
         console.error(error);
+        setLoading(false);
         toast.error(error.response?.data?.Message || "Something went wrong");
       }
     };
@@ -108,7 +111,7 @@ const Billing = () => {
                   {item.title === "Free" ? (
                     <div className="flex justify-center items-center p-5 bg-gray-200 rounded-b-2xl">
                       <Button
-                      onClick={openSignIn}
+                        onClick={openSignIn}
                         className={`w-full !bg-gray-400 rounded-[10px] justify-center`}
                       >
                         Already
