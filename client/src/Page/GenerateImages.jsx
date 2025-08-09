@@ -55,14 +55,15 @@ const GenerateImages = () => {
                 setProcess(currentProcess);
               }
             },
-            onDownloadProgress: (event) => {
-              if (event.total > 0) {
-                const currentProcess = Math.floor(
-                  (event.loaded * 40) / event.total
-                );
-                setProcess((prev) => (prev += currentProcess));
-              }
-            },
+            // On Vercel, I only get upload progress because the response is sent as one big chunk at the end — no streaming → no incremental download progress.
+            // onDownloadProgress: (event) => {
+            //   if (event.total > 0) {
+            //     const currentProcess = Math.floor(
+            //       (event.loaded * 40) / event.total
+            //     );
+            //     setProcess((prev) => (prev += currentProcess));
+            //   }
+            // },
             headers: {
               Authorization: `Bearer ${await getToken()}`,
             },
@@ -78,9 +79,12 @@ const GenerateImages = () => {
             toast.error(response.data.imagesURL.error.error.message, {
               autoClose: 3500,
             });
+            //
+            setProcess(100);
             setLoading(false);
             return;
           }
+          setProcess(100);
           setContent(response.data.imagesURL);
           setLoading(false);
         }
@@ -89,6 +93,7 @@ const GenerateImages = () => {
           error.response?.data?.Message ||
           error.message ||
           "Something went wrong";
+        setProcess(100);
         toast.error(message, { autoClose: 3500 });
         setLoading(false);
       }
