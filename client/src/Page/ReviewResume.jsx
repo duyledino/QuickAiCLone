@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { LinkSidebar } from "../assets/assets";
 import Configuration from "../Components/Configuration";
@@ -10,10 +10,12 @@ import { motion } from "motion/react";
 import axios from "axios";
 import { useAuth } from "@clerk/clerk-react";
 import { toast } from "react-toastify";
+import Process from "../Components/Process";
 
 axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL;
 
 const ReviewResume = () => {
+  const [process, setProcess] = useState(null);
   const path = useLocation();
   const object = LinkSidebar.find((l) => l.path === path.pathname);
   const { getToken } = useAuth();
@@ -27,21 +29,51 @@ const ReviewResume = () => {
     formData.append("pdf", pdf);
     try {
       const response = await axios.post("/ai/resume_reviewer", formData, {
-      headers: {
-        Authorization: `Bearer ${await getToken()}`,
-      },
-    });
-    console.log(response.data);
-    if (response.status === 200) {
-      setContent(response.data.pdfData);
-      setLoading(false);
-    }
+        onUploadProgress: (event) => {
+          if (event.total > 0) {
+            const currentProcess = Math.floor(
+              (event.loaded * 60) / event.total
+            );
+            setProcess(currentProcess);
+          }
+        },
+        onDownloadProgress: (event) => {
+          if (event.total > 0) {
+            const currentProcess = Math.floor(
+              (event.loaded * 40) / event.total
+            );
+            setProcess((prev) => (prev += currentProcess));
+          }
+        },
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+        },
+      });
+      console.log(response.data);
+      if (response.status === 200) {
+        setContent(response.data.pdfData);
+        setLoading(false);
+      }
     } catch (error) {
       console.log(error);
-      toast.error(error.response?.data?.Message||error.message||"Something went wrong",{autoClose:3500});
-      setLoading(false)
+      toast.error(
+        error.response?.data?.Message ||
+          error.message ||
+          "Something went wrong",
+        { autoClose: 3500 }
+      );
+      setLoading(false);
     }
   };
+  useEffect(() => {
+    let Timeout;
+    if (process !== null && process === 100) {
+      Timeout = setTimeout(() => {
+        setProcess(null);
+      }, 1000);
+    }
+    return () => clearTimeout(Timeout);
+  }, [process]);
   return (
     <motion.div
       initial={{ opacity: 0, translateY: "10px" }}
@@ -79,11 +111,13 @@ const ReviewResume = () => {
                 Supports PDF resume only.
               </h1>
             </div>
-
+            {process !== null ? <Process process={process} /> : ""}
             <button
               disabled={loading}
               type="submit"
-              className="cursor-pointer text-center text-white text-[12px] flex items-center justify-center gap-2 p-1.5 rounded-[4px]"
+              className={`text-center text-white text-[12px] flex items-center justify-center gap-2 p-1.5 rounded-[4px] ${
+                loading ? "cursor-not-allowed" : "cursor-pointer"
+              }`}
               style={{
                 background: `linear-gradient(120deg,${object.bg.from},${object.bg.to})`,
               }}

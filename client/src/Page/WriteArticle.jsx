@@ -11,14 +11,16 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "@clerk/clerk-react";
 import { toast } from "react-toastify";
+import Process from "../Components/Process";
 axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL;
 
+const articleLength = [
+  { length: 800, text: "Short (500-800 words)" },
+  { length: 1200, text: "Medium (800-1200 words)" },
+  { length: 1600, text: "Long (1200+ words)" },
+];
 const WriteArticle = () => {
-  const articleLength = [
-    { length: 800, text: "Short (500-800 words)" },
-    { length: 1200, text: "Medium (800-1200 words)" },
-    { length: 1600, text: "Long (1200+ words)" },
-  ];
+  const [process, setProcess] = useState(null);
   const path = useLocation();
   const object = LinkSidebar.find((l) => l.path === path.pathname);
   const { getToken } = useAuth();
@@ -30,24 +32,45 @@ const WriteArticle = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-      "/ai/article_writter",
-      {
-        articleTopic: article,
-        length: 800,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${await getToken()}`,
+        "/ai/article_writter",
+        {
+          articleTopic: article,
+          length: 800,
         },
+        {
+          onUploadProgress: (event) => {
+            if (event.total > 0) {
+              const currentProcess = Math.floor(
+                (event.loaded * 60) / event.total
+              );
+              setProcess(currentProcess);
+            }
+          },
+          onDownloadProgress: (event) => {
+            if (event.total > 0) {
+              const currentProcess = Math.floor(
+                (event.loaded * 40) / event.total
+              );
+              setProcess((prev) => (prev += currentProcess));
+            }
+          },
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setLoading(false);
+        setContent(response.data.article);
       }
-    );
-    if (response.status === 200) {
-      setLoading(false);
-      setContent(response.data.article);
-    }
     } catch (error) {
-     toast.error(error.response?.data?.Message||error.message||"something went wrong",{autoClose:3500}) ;
-     setLoading(false);
+      toast.error(
+        error.response?.data?.Message ||
+          error.message ||
+          "something went wrong",
+        { autoClose: 3500 }
+      );
+      setLoading(false);
     }
   };
 
@@ -57,6 +80,15 @@ const WriteArticle = () => {
       fetchApi();
     }
   };
+  useEffect(() => {
+    let Timeout;
+    if (process !== null && process === 100) {
+      Timeout = setTimeout(() => {
+        setProcess(null);
+      }, 1000);
+    }
+    return () => clearTimeout(Timeout);
+  }, [process]);
   return (
     <motion.div
       initial={{ opacity: 0, translateY: "10px" }}
@@ -112,10 +144,13 @@ const WriteArticle = () => {
                 ))}
               </div>
             </div>
+            {process !== null ? <Process process={process} /> : ""}
             <button
-            disabled={loading}
+              disabled={loading}
               type="submit"
-              className="cursor-pointer text-center text-white text-[12px] flex items-center justify-center gap-2 p-1.5 rounded-[4px]"
+              className={`text-center text-white text-[12px] flex items-center justify-center gap-2 p-1.5 rounded-[4px] ${
+                loading ? "cursor-not-allowed" : "cursor-pointer"
+              }`}
               style={{
                 background: `linear-gradient(120deg,${object.bg.from},${object.bg.to})`,
               }}
