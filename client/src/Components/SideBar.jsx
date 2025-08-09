@@ -19,22 +19,25 @@ const SideBar = ({ showSidebar }) => {
     console.log(user);
     const fetchApi = async () => {
       try {
-        const response = await axios.get(`/user/user_info?user_id=${user?.id}`, {
-          headers: {
-            Authorization: `Bearer ${await getToken()}`,
-          },
-        });
-        console.log("response in sidebar: ",response);
+        const response = await axios.get(
+          `/user/user_info?user_id=${user?.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${await getToken()}`,
+            },
+          }
+        );
+        console.log("response in sidebar: ", response);
         if (response.status === 200) {
           setPlan(response?.data?.user?.user_plan);
-          console.log("user plan here: ",response?.data?.user?.user_plan);
+          console.log("user plan here: ", response?.data?.user?.user_plan);
         }
       } catch (error) {
         console.error(error);
         toast.error(error.response?.data?.Message || "Something went wrong");
       }
     };
-    if(user !== null){
+    if (user !== null) {
       fetchApi();
     }
   }, [user]);
@@ -107,7 +110,9 @@ const SideBar = ({ showSidebar }) => {
                 />
                 <div className="flex flex-col">
                   <h2 className="font-bold">{user.fullName}</h2>
-                  <p className="text-gray-400 capitalize">plan type</p>
+                  <p className="text-gray-400 capitalize">
+                    {plan || "plan type"}
+                  </p>
                 </div>
               </div>
               <LogOut className="cursor-pointer" onClick={signOut} />
